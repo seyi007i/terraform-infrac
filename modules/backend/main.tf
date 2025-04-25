@@ -61,6 +61,7 @@ resource "aws_autoscaling_group" "backend_asg" {
   max_size             = 3
   min_size             = 1
   vpc_zone_identifier  = var.private_subnets
+  
   launch_template {
     id      = aws_launch_template.backend.id
     version = "$Latest"
