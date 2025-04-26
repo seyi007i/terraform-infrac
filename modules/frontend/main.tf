@@ -3,21 +3,28 @@ resource "aws_instance" "bastion" {
   instance_type          = "t2.micro"
   subnet_id              = var.public_subnet_id
   vpc_security_group_ids = [var.bastion_sg_id]
-  key_name               = "my-key"
+  key_name               = "terraform-key"
 }
 
 resource "aws_instance" "nginx" {
   count                  = 2
-  ami                    = "ami-0c2b8ca1dad447f8a"
+  ami                    = "ami-0dba2c7f21e8a38b1"  
   instance_type          = "t2.micro"
   subnet_id              = var.public_subnet_id
   vpc_security_group_ids = [var.nginx_sg_id]
-
+  
   user_data = <<-EOF
               #!/bin/bash
-              amazon-linux-extras install -y nginx1
+              # Update the package list
+              apt-get update -y
+              # Install Nginx
+              apt-get install -y nginx
+              # Start Nginx service
               systemctl start nginx
+              # Enable Nginx to start on boot
               systemctl enable nginx
+              # Create a custom index.html page
+              echo "<html><body><h1>front end server</h1></body></html>" > /var/www/html/index.html
               EOF
 }
 
