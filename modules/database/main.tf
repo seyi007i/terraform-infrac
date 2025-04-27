@@ -31,19 +31,22 @@ resource "aws_security_group" "db_sg" {
   }
 }
 
-resource "aws_dynamodb_table" "app_table" {
-  name           = "appdb"
-  billing_mode   = "PAY_PER_REQUEST"   # On-demand billing mode
-  hash_key       = "id"                 # Partition key for the table
-  attribute {
-    name = "id"
-    type = "S"                         # String type for the 'id' attribute
-  }
-
-  # Additional attributes or keys based on your data model
-  # If you want, you can add range keys, global secondary indexes, etc.
+resource "aws_db_instance" "mysql" {
+  identifier              = "mysql-db"
+  allocated_storage       = 20
+  engine                  = "mysql"
+  engine_version          = "8.0"
+  instance_class          = "db.t3.micro"
+  db_name                    = "appdb"
+  username                = "admin"
+  password                = "password123"
+  vpc_security_group_ids  = [aws_security_group.db_sg.id]
+  db_subnet_group_name    = aws_db_subnet_group.db_subnets.name
+  skip_final_snapshot     = true
+  publicly_accessible     = false
+  multi_az                = false
 
   tags = {
-    Name = "appdb"
+    Name = "mysql-db"
   }
 }

@@ -1,6 +1,6 @@
 resource "aws_launch_template" "backend" {
   name_prefix   = "backend-lt"
-  image_id      = "ami-0dba2c7f21e8a38b1"
+  image_id      = "ami-0f9de6e2d2f067fca"
   instance_type = "t2.micro"
   vpc_security_group_ids = [var.backend_sg_id]
 
@@ -29,3 +29,5 @@ resource "aws_autoscaling_group" "backend_asg" {
     version = "$Latest"
   }
 }
+
+

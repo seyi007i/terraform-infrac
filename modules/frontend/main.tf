@@ -8,7 +8,7 @@ resource "aws_instance" "bastion" {
 
 resource "aws_instance" "nginx" {
   count                  = 2
-  ami                    = "ami-0dba2c7f21e8a38b1"  
+  ami                    = "ami-0f9de6e2d2f067fca"  
   instance_type          = "t2.micro"
   subnet_id              = var.public_subnet_id
   vpc_security_group_ids = [var.nginx_sg_id]
@@ -44,6 +44,7 @@ resource "aws_lb_target_group" "nginx_tg" {
 
 resource "aws_lb_target_group_attachment" "nginx_attach" {
   count            = 2
+  
   target_group_arn = aws_lb_target_group.nginx_tg.arn
   target_id        = aws_instance.nginx[count.index].id
   port             = 80
