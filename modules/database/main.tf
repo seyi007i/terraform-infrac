@@ -7,8 +7,8 @@ resource "aws_db_subnet_group" "db_subnets" {
   }
 }
 
-resource "aws_security_group" "db_sg" {
-  name        = "db-sg"
+resource "aws_security_group" "db_sg1" {
+  name        = "db-sg1"
   description = "Allow MySQL access from backend tier"
   vpc_id      = var.vpc_id
 
@@ -40,7 +40,7 @@ resource "aws_db_instance" "mysql" {
   db_name                    = "appdb"
   username                = "admin"
   password                = "password123"
-  vpc_security_group_ids  = [aws_security_group.db_sg.id]
+  vpc_security_group_ids  = [aws_security_group.db_sg1.id]
   db_subnet_group_name    = aws_db_subnet_group.db_subnets.name
   skip_final_snapshot     = true
   publicly_accessible     = false

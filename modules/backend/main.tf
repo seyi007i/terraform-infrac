@@ -4,30 +4,33 @@ resource "aws_launch_template" "backend" {
   instance_type = "t2.micro"
   vpc_security_group_ids = [var.backend_sg_id]
 
-  user_data = <<-EOF
+  user_data = base64encode(<<-EOF
               #!/bin/bash
               apt-get update -y
               apt-get install -y nginx
-              # Start Nginx service
               systemctl start nginx
-              # Enable Nginx to start on boot
               systemctl enable nginx
-              # Create a custom index.html page
               echo "<html><body><h1>Backend server</h1></body></html>" > /var/www/html/index.html
               EOF
-              
-              }
+  )
+}
 
 resource "aws_autoscaling_group" "backend_asg" {
   desired_capacity     = 2
   max_size             = 3
   min_size             = 1
   vpc_zone_identifier  = var.private_subnets
-  
+  health_check_type     = "EC2"
+  health_check_grace_period = 300
+
   launch_template {
     id      = aws_launch_template.backend.id
     version = "$Latest"
   }
+
+  tag {
+    key                 = "Name"
+    value               = "backend-server"
+    propagate_at_launch = true
+  }
 }
-
-

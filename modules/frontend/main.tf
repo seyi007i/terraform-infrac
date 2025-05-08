@@ -1,5 +1,5 @@
 resource "aws_instance" "bastion" {
-  ami                    = "ami-0c2b8ca1dad447f8a" # Amazon Linux 2
+  ami                    = "ami-0f9de6e2d2f067fca" # Amazon Linux 2
   instance_type          = "t2.micro"
   subnet_id              = var.public_subnet_id
   vpc_security_group_ids = [var.bastion_sg_id]
